@@ -9,7 +9,7 @@ phases:
   build:
     commands:
       - echo "[BUILD] Building Laravel Docker image..."
-      - docker build --no-cache -f Dockerfile -t ${CONTAINER_NAME} .
+      - docker build --no-cache -f app-nagoyameshi/Dockerfile -t ${CONTAINER_NAME} app-nagoyameshi
       - docker tag ${CONTAINER_NAME} ${REPOSITORY_URI}:latest
       - docker push ${REPOSITORY_URI}:latest
 
