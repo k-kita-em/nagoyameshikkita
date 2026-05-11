@@ -43,6 +43,8 @@ module "dev_ecs" {
   db_username     = "root"
   app_key_secret_arn     = aws_secretsmanager_secret.app_key.arn
   db_password_secret_arn = aws_secretsmanager_secret.db_password.arn
+  desired_count          = 0
+  app_url                = "https://d2jriozcuyz3ue.cloudfront.net"
 }
 
 module "dev_cicd" {
@@ -53,6 +55,7 @@ module "dev_cicd" {
   subnet_id_1        = module.dev_vpc.ecs_subnet1a
   subnet_id_2        = module.dev_vpc.ecs_subnet1c
   security_group_id  = module.dev_ecs.ecs_security_group
+  github_branch      = "dev"
 }
 
 module "dev_rds" {

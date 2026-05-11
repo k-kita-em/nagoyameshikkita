@@ -23,6 +23,16 @@ variable "db_username" {
 }
 
 variable "db_password" {
-  type = string
+  type      = string
   sensitive = true
+}
+
+variable "multi_az" {
+  type    = bool
+  default = false
+}
+
+variable "instance_class" {
+  type    = string
+  default = "db.t3.micro"
 }

@@ -48,8 +48,8 @@ container_definitions = jsonencode([
       { name = "APP_ENV",       value = "local" },
       { name = "APP_DEBUG",     value = "true" },
       { name = "LOG_CHANNEL",   value = "stderr" },
-      { name = "APP_URL",       value = "https://d2jriozcuyz3ue.cloudfront.net" },
-      { name = "ASSET_URL",     value = "https://d2jriozcuyz3ue.cloudfront.net" },
+      { name = "APP_URL",       value = var.app_url },
+      { name = "ASSET_URL",     value = var.app_url },
       { name = "DB_CONNECTION", value = "mysql" },
       { name = "DB_HOST",       value = var.db_host },
       { name = "DB_PORT",       value = "3306" },
@@ -185,7 +185,7 @@ resource "aws_ecs_service" "app" {
   cluster         = aws_ecs_cluster.app.id
   task_definition = aws_ecs_task_definition.app.arn
   launch_type     = "FARGATE"
-  desired_count   = 1   # 冗長化のため2つ以上が推奨　コスト下げるときは0にする
+  desired_count   = var.desired_count
 
   network_configuration {
     subnets         = [var.ecs_subnet1a, var.ecs_subnet1c]  # ← 複数AZ

@@ -56,3 +56,12 @@ variable "app_key_secret_arn" {
 variable "db_password_secret_arn" {
   type = string
 }
+
+variable "desired_count" {
+  type    = number
+  default = 1
+}
+
+variable "app_url" {
+  type = string
+}

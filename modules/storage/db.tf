@@ -33,7 +33,7 @@ resource "aws_db_instance" "mysql" {
   identifier              = "${var.project_env}-mysql"
   engine                  = "mysql"
   engine_version          = "8.0"
-  instance_class          = "db.t3.micro"
+  instance_class          = var.instance_class
   allocated_storage       = 20
 
   db_name                 = "laravel_nagoyameshi"
@@ -45,7 +45,7 @@ resource "aws_db_instance" "mysql" {
 
   skip_final_snapshot     = true
   publicly_accessible     = false
-  multi_az                = false  # ← 冗長化（本番はtrueにする）
+  multi_az                = var.multi_az
 
   backup_retention_period = 1 #バックアップ保持日数 本当は7にしたいけど無料枠のため1
   backup_window           = "18:00-19:00" #バックアップ実行時間
