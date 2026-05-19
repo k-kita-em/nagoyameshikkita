@@ -32,7 +32,7 @@ module "prod_ecs" {
   vpc_id          = module.prod_vpc.vpc_id
   ecs_subnet1a    = module.prod_vpc.ecs_subnet1a
   ecs_subnet1c    = module.prod_vpc.ecs_subnet1c
-  ecr_image_url   = "040591922141.dkr.ecr.ap-northeast-1.amazonaws.com/my-repository:latest"
+  ecr_image_url   = "040591922141.dkr.ecr.ap-northeast-1.amazonaws.com/nagoyameshi-prod-ecr:latest"
   project_env     = var.project_env
   public_subnet1a = module.prod_vpc.public_subnet1a
   public_subnet1c = module.prod_vpc.public_subnet1c
@@ -40,14 +40,14 @@ module "prod_ecs" {
   db_username     = "root"
   app_key_secret_arn     = aws_secretsmanager_secret.app_key.arn
   db_password_secret_arn = aws_secretsmanager_secret.db_password.arn
-  desired_count          = 1
+  desired_count          = 1 #本当は2つ以上が推奨
   app_url                = "https://dywrxp7cm24bg.cloudfront.net"
 }
 
 module "prod_cicd" {
   source             = "../../modules/cicd"
   project_env        = var.project_env
-  ecr_repository_url = "040591922141.dkr.ecr.ap-northeast-1.amazonaws.com/my-repository"
+  ecr_repository_url = "040591922141.dkr.ecr.ap-northeast-1.amazonaws.com/nagoyameshi-prod-ecr"
   github_repo        = var.github_repo
   subnet_id_1        = module.prod_vpc.ecs_subnet1a
   subnet_id_2        = module.prod_vpc.ecs_subnet1c
@@ -68,7 +68,7 @@ module "prod_rds" {
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "terraform-statefile-kk-samurainagoyameshi-prod"
+  bucket = "nagoyameshi-prod-s3-tfstate-040591922141"
 }
 
 resource "aws_s3_bucket_versioning" "terraform_state" {
@@ -81,7 +81,7 @@ resource "aws_s3_bucket_versioning" "terraform_state" {
 
 terraform {
   backend "s3" {
-    bucket  = "terraform-statefile-kk-samurainagoyameshi-prod"
+    bucket  = "nagoyameshi-prod-s3-tfstate-040591922141"
     region  = "ap-northeast-1"
     key     = "prod-tfstate/terraform.tfstate"
     encrypt = true

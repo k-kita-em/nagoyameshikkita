@@ -29,6 +29,16 @@ resource "aws_vpc_security_group_egress_rule" "rds_egress" {
   ip_protocol       = "-1"
 }
 
+resource "aws_db_parameter_group" "mysql" {
+  name   = "${var.project_env}-mysql-pg"
+  family = "mysql8.0"
+
+  parameter {
+    name  = "time_zone"
+    value = "Asia/Tokyo"
+  }
+}
+
 resource "aws_db_instance" "mysql" {
   identifier              = "${var.project_env}-mysql"
   engine                  = "mysql"
@@ -42,6 +52,7 @@ resource "aws_db_instance" "mysql" {
 
   db_subnet_group_name    = aws_db_subnet_group.db.name
   vpc_security_group_ids  = [aws_security_group.rds.id]
+  parameter_group_name    = aws_db_parameter_group.mysql.name
 
   skip_final_snapshot     = true
   publicly_accessible     = false

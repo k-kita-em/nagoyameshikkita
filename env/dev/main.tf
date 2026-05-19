@@ -35,7 +35,7 @@ module "dev_ecs" {
   vpc_id          = module.dev_vpc.vpc_id
   ecs_subnet1a    = module.dev_vpc.ecs_subnet1a
   ecs_subnet1c    = module.dev_vpc.ecs_subnet1c
-  ecr_image_url   = "040591922141.dkr.ecr.ap-northeast-1.amazonaws.com/my-repository:latest"
+  ecr_image_url   = "040591922141.dkr.ecr.ap-northeast-1.amazonaws.com/nagoyameshi-dev-ecr:latest"
   project_env     = var.project_env
   public_subnet1a = module.dev_vpc.public_subnet1a
   public_subnet1c = module.dev_vpc.public_subnet1c
@@ -43,14 +43,14 @@ module "dev_ecs" {
   db_username     = "root"
   app_key_secret_arn     = aws_secretsmanager_secret.app_key.arn
   db_password_secret_arn = aws_secretsmanager_secret.db_password.arn
-  desired_count          = 0
+  desired_count          = 1
   app_url                = "https://d2jriozcuyz3ue.cloudfront.net"
 }
 
 module "dev_cicd" {
   source             = "../../modules/cicd"
   project_env        = var.project_env
-  ecr_repository_url = "040591922141.dkr.ecr.ap-northeast-1.amazonaws.com/my-repository"
+  ecr_repository_url = "040591922141.dkr.ecr.ap-northeast-1.amazonaws.com/nagoyameshi-dev-ecr"
   github_repo        = var.github_repo
   subnet_id_1        = module.dev_vpc.ecs_subnet1a
   subnet_id_2        = module.dev_vpc.ecs_subnet1c
@@ -74,8 +74,7 @@ module "dev_rds" {
 
 #バケットの作成
 resource "aws_s3_bucket" "terraform_state" {
-    bucket = "terraform-statefile-kk-samurainagoyameshi"
-  
+  bucket = "nagoyameshi-dev-s3-tfstate-040591922141"
 }
 resource "aws_s3_bucket_versioning" "terraform_state" {
     bucket = aws_s3_bucket.terraform_state.id
@@ -87,9 +86,9 @@ resource "aws_s3_bucket_versioning" "terraform_state" {
 #statefileの保存先（S3バケット作成後に有効化する）
 terraform {
   backend "s3" {
-    bucket = "terraform-statefile-kk-samurainagoyameshi"
-    region = "ap-northeast-1"
-    key    = "dev-tfstate/terraform.tfstate"
+    bucket  = "nagoyameshi-dev-s3-tfstate-040591922141"
+    region  = "ap-northeast-1"
+    key     = "dev-tfstate/terraform.tfstate"
     encrypt = true
   }
 }
