@@ -107,7 +107,7 @@ resource "aws_security_group" "alb_sg" {
     name = "alb_sg"
 
     tags = {
-        Name = "${var.project_env}-web-sg"}
+        Name = "${var.project_env}-alb-sg"}
     }
   
 resource "aws_vpc_security_group_ingress_rule" "web_http" {

@@ -39,6 +39,12 @@ resource "aws_db_parameter_group" "mysql" {
   }
 }
 
+resource "aws_db_option_group" "mysql" {
+  name                     = "${var.project_env}-mysql-og"
+  engine_name              = "mysql"
+  major_engine_version     = "8.0"
+}
+
 resource "aws_db_instance" "mysql" {
   identifier              = "${var.project_env}-mysql"
   engine                  = "mysql"
@@ -53,6 +59,7 @@ resource "aws_db_instance" "mysql" {
   db_subnet_group_name    = aws_db_subnet_group.db.name
   vpc_security_group_ids  = [aws_security_group.rds.id]
   parameter_group_name    = aws_db_parameter_group.mysql.name
+  option_group_name       = aws_db_option_group.mysql.name
 
   skip_final_snapshot     = true
   publicly_accessible     = false
